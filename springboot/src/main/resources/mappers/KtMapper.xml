@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dao.KtDao">
+    <select id="kt_findPage" resultType="com.example.entity.kt">
+        select * from sys_kt limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="l_tid" resultType="com.example.entity.kt">
+        select tid from sys_kt where tid not in (select tid from sys_dt where stuuname=#{stuuname})
+    </select>
+
+    <select id="kt" resultType="com.example.entity.kt">
+        select tid,teaname,tname,tt from sys_kt where tid=#{tid}
+    </select>
+
+    <select id="mykt_findPage" resultType="com.example.entity.kt">
+        select * from sys_kt where teaname=#{teaname} limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="mykt_count" resultType="java.lang.Integer">
+        select count(*) from sys_kt where teaname=#{teaname}
+    </select>
+
+    <insert id="mykt_insert">
+        insert into sys_kt(tid,teaname,tname,tt,ttc) value(#{tid},#{teaname},#{tname},#{tt},#{ttc})
+    </insert>
+
+    <update id="mykt_update">
+        update sys_kt
+        <set>
+            <if  test="tid != null || tid != ''">
+                tid=#{tid},
+            </if>
+            <if  test="teaname != null || teaname != ''">
+                teaname=#{teaname},
+            </if>
+            <if  test="tname != null || tname != ''">
+                tname=#{tname},
+            </if>
+            <if  test="tt != null || tt != ''">
+                tt=#{tt},
+            </if>
+            <if  test="ttc != null || ttc != ''">
+                ttc=#{ttc}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="mykt_delete">
+        delete from sys_kt where id=#{id}
+    </delete>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        <if test="status=='kt'">sys_kt</if>
+    </select>
+
+
+</mapper>

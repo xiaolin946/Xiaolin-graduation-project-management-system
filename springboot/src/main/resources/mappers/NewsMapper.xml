@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dao.NewsDao">
+    <select id="news_findPage" resultType="com.example.entity.news">
+        select * from sys_news limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="news_count" resultType="java.lang.Integer">
+        select count(*) from sys_news
+    </select>
+
+    <insert id="news_insert">
+        insert into sys_news(xstatus,puser,guser,title,content,pdate) value(#{xstatus},#{puser},#{guser},#{title},#{content},now())
+    </insert>
+
+    <update id="news_update">
+        update sys_news
+        <set>
+            <if  test="xstatus != null || xstatus != ''">
+                xstatus=#{xstatus},
+            </if>
+            <if  test="puser != null || puser != ''">
+                puser=#{puser},
+            </if>
+            <if  test="guser != null || guser != ''">
+                guser=#{guser},
+            </if>
+            <if  test="title != null || title != ''">
+                title=#{title},
+            </if>
+            <if  test="content != null || content != ''">
+                content=#{content}
+            </if>
+        </set>
+        where xid=#{xid};
+    </update>
+
+    <delete id="news_delete">
+        delete from sys_news where xid=#{xid}
+    </delete>
+
+    <select id="snews_findPage" resultType="com.example.entity.news">
+        select * from sys_news where guser like '%all%' or guser like concat('%',#{status},'%') limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="snews_count" resultType="java.lang.Integer">
+        select count(*) from sys_news where guser like '%all%' or guser like concat('%',#{status},'%')
+    </select>
+
+    <select id="mynews_findPage" resultType="com.example.entity.news">
+        select * from sys_news where puser=#{puser} limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="mynews_findPage_count" resultType="java.lang.Integer">
+        select count(*) from sys_news where puser=#{puser}
+    </select>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dao.DtDao">
+    <select id="dt_findPage" resultType="com.example.entity.dt_stu">
+        select sys_dt.stuuname,sys_dt.stuname,sys_dt.tid,sys_dt.tname,sys_dt.tt from sys_dt,sys_student
+        where sys_student.username = sys_dt.stuuname and sys_dt.ps = '已通过'
+            limit #{pageNum},#{pageSize}
+    </select>
+    <select id="dt_count" resultType="java.lang.Integer">
+        select count(*) from sys_student where username in (select stuuname from sys_dt where ps = '已通过')
+    </select>
+    <select id="mdt_findPage" resultType="com.example.entity.User">
+        select username,name from sys_student where username not in(select stuuname from sys_dt) or username in (select stuuname from sys_dt where ps = '已发送')
+            limit #{pageNum},#{pageSize}
+    </select>
+    <select id="mdt_count" resultType="java.lang.Integer">
+        select count(*) from sys_student where username not in(select stuuname from sys_dt) or username in (select stuuname from sys_dt where ps = '已发送')
+    </select>
+
+    <select id="dt" resultType="com.example.entity.dt">
+        select * from sys_dt where stuuname=#{stuuname}
+    </select>
+
+    <insert id="dt_insert">
+        insert into sys_dt(stuuname,stuname,sex,age,tid,teaname,tname,tt,ps) value(#{stuuname},#{stuname},#{sex},#{age},#{tid},#{teaname},#{tname},#{tt},#{ps})
+    </insert>
+
+    <delete id="dt_delete">
+        delete from sys_dt where id=#{id}
+    </delete>
+
+    <select id="l_tid" resultType="com.example.entity.kt">
+        select tid from sys_kt where tid not in (select tid from sys_dt where stuuname=#{stuuname})
+    </select>
+
+    <select id="kt" resultType="com.example.entity.kt">
+        select tid,teaname,tname,tt from sys_kt where tid=#{tid}
+    </select>
+
+    <select id="sdt_count" resultType="java.lang.Integer">
+        select count(*) from sys_dt where stuuname=#{stuuname} and ps='已发送'
+    </select>
+
+    <select id="sdt_ps" resultType="java.lang.Integer">
+        select count(*) from sys_dt where stuuname=#{stuuname} and ps='已通过'
+    </select>
+
+    <select id="dt_tfindPage" resultType="com.example.entity.dt">
+        select * from sys_dt where teaname=#{teaname} limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="dt_tfindPage_count" resultType="java.lang.Integer">
+        select count(*) from sys_dt where teaname=#{teaname}
+    </select>
+
+    <update id="dt_t">
+        update sys_dt set ps='已通过' where id=#{id}
+    </update>
+
+    <update id="dt_t_ps">
+        update sys_dt set ps='已失效'
+        where stuuname in (select stuuname from sys_kt where stuuname=#{stuuname} and ps='已发送')
+    </update>
+
+    <update id="dt_f">
+        update sys_dt set ps='已拒绝' where id=#{id}
+    </update>
+</mapper>

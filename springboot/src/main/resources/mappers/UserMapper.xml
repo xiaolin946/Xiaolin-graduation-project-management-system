@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dao.UserDao">
+
+    <select id="login" resultType="com.example.entity.User">
+        select status,username from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        where status=#{status} and username=#{username} and password=#{password}
+    </select>
+
+    <select id="findStatusAll" resultType="com.example.entity.User">
+        select * from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        where status=#{status}
+    </select>
+
+    <insert id="insert">
+        insert into
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        (status,username,password,register_date,name,sex,age) value(#{status},#{username},#{password},now(),#{name},#{sex},#{age})
+    </insert>
+
+    <update id="update">
+        update
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        <set>
+            <if  test="status != null || status != ''">
+                status=#{status},
+            </if>
+            <if  test="username != null || username != ''">
+                username=#{username},
+            </if>
+            <if  test="name != null || name != ''">
+                name=#{name},
+            </if>
+            <if  test="sex != null || sex != ''">
+                sex=#{sex},
+            </if>
+            <if  test="age != null || age != ''">
+                age=#{age}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        where username=#{username}
+    </delete>
+
+    <select id="findPage" resultType="com.example.entity.User">
+        select * from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        <if test="status=='kt'">sys_kt</if>
+    </select>
+
+    <select id="myxx" resultType="com.example.entity.User">
+        select id,status,username,name,sex,age from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        where username=#{username}
+    </select>
+
+    <update id="uppsd">
+        update
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        set password=#{password} where username=#{username}
+    </update>
+
+    <select id="mypsd" resultType="java.lang.String">
+        select password from
+        <if test="status=='Administrator'">sys_admin</if>
+        <if test="status=='Teacher'">sys_teacher</if>
+        <if test="status=='Student'">sys_student</if>
+        where username=#{username}
+    </select>
+
+
+</mapper>
